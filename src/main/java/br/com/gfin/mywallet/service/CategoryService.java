@@ -2,6 +2,7 @@ package br.com.gfin.mywallet.service;
 
 import br.com.gfin.mywallet.controller.dto.CreateUpdateCategoryDto;
 import br.com.gfin.mywallet.entity.Category;
+import br.com.gfin.mywallet.exception.EntityNotFoundException;
 import br.com.gfin.mywallet.repository.CategoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,16 +23,23 @@ public class CategoryService {
         return categoryRepository.save(category);
     }
 
-    public Category update(Long id, String description) throws Exception {
+    public Category update(Long id, CreateUpdateCategoryDto categoryDto) throws EntityNotFoundException {
         Optional<Category> category = categoryRepository.findById(id);
 
         if(category.isPresent()){
-            category.get().setDescription(description);
+            category.get().setDescription(categoryDto.getDescription());
             return categoryRepository.save(category.get());
         }
+        throw new EntityNotFoundException("category not found");
+    }
 
-        throw new Exception("category not found");
+    public void delete(Long id) throws EntityNotFoundException {
+        Optional<Category> category = categoryRepository.findById(id);
 
+        if(category.isPresent()){
+            categoryRepository.delete(category.get());
+        }
+        throw new EntityNotFoundException("category not found");
     }
 
     public List<Category> findAll(){

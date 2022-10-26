@@ -34,8 +34,6 @@ public class ExpenseService {
         if (category.isEmpty()) {
             throw new Exception("invalid category");
         }
-
-
         Expense newExpense = Expense.builder()
                 .description(newExpenseDto.getDescription())
                 .amount(newExpenseDto.getAmount())
